@@ -8,18 +8,22 @@ String imgName = "landscape01.jpg";
 PImage img;
 PImage brush;
 int strokesFrame = 100;
+color colorGradient1, colorGradient2;
 
 void settings() {
 	size(sceneWidth,sceneHeight,P2D);
+
 }
 
 
 void setup(){
 	background(bgColor);
-
+	frameRate(1000);
 	img = loadImage(pathDATA+imgName);
-	brush = loadImage(pathDATA+"brush01.png");
+	brush = loadImage(pathDATA+"/brushes/stroke1.png");
 	//image(img, 0, 0);
+	colorGradient1 = color(255,0,0);
+	colorGradient2 = color(255, 255, 255);
 }
 
 void draw(){
@@ -27,13 +31,17 @@ void draw(){
 	for(int i=0; i<strokesFrame; i++){
 		
 		PVector pos = getRandomPos(img);
-		color c = getColorAt(img, pos.x, pos.y);
+		color inColor = getColorAt(img, pos.x, pos.y);
 		PVector target = mapPosition(pos, img, width, height);
-
+		float b = brightness(inColor);
+		color gradientColor = lerpColor(colorGradient1, colorGradient2, b/255);
+		color outColor = lerpColor(inColor, gradientColor, 0.0);
+		float strokeSize = 80 - frameCount/10.0;
+		if(strokeSize<20){ strokeSize = 20; }
 		//Stroke s = new Stroke(target, 1, c);
-		//StrokeRect sr = new StrokeRect(target, 10, 10, c);
+		StrokeRect sr = new StrokeRect(target, strokeSize, strokeSize, outColor);
 		//StrokeEllipse se = new StrokeEllipse(target, 10, 10, c);
-		StrokeBrush sb = new StrokeBrush(brush,target, 150, 50, c);
+		StrokeBrush sb = new StrokeBrush(brush,target, (int)strokeSize, 40, outColor);
 		sb.display();
 	}
 	

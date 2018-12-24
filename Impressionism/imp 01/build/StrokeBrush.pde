@@ -6,7 +6,7 @@ class StrokeBrush extends Stroke {
 	
 	StrokeBrush(PImage brush, PVector pos, float w, float h, color c){
 		super(pos, w, c);
-		this.imgBrush = brush;
+		this.imgBrush = brush.copy();
 		this.strokeWidth = w;
 		this.strokeHeight = h;
 
@@ -15,10 +15,11 @@ class StrokeBrush extends Stroke {
 
 	void display(){
 		imageMode(CENTER);
-		
-		translate(strokePosition.x, strokePosition.y);
-		rotate(random(-PI/50, PI/50));
-		tint(strokeColor, 200);
-		image(imgBrush, 0,0);
+		pushMatrix();
+			translate(strokePosition.x, strokePosition.y);
+			rotate(map(red(strokeColor), 0, 255, 0, PI));
+			tint(strokeColor, 150);
+			image(imgBrush, 0,0);
+		popMatrix();
 	}
 }
